@@ -2,29 +2,9 @@
 
 set -x
 
-GPU_OPT=""
-if [ ! -d /opt/rocm ]
-then
-    cuda_opt=""
-    if [ -n $CUDA_VERSION ] ; then
-        cuda_ver_str=`echo $CUDA_VERSION | awk -F "." '{print $1"."$2}'`
-        ARCH_TYPE=`uname -m`
-	CUDA_DIR="/usr/local/cuda-$cuda_ver_str"
-
-	if [[ ! -e $CUDA_DIR && -e /opt/nvidia/hpc_sdk ]]; then
-	    CUDA_DIR="/opt/nvidia/hpc_sdk/Linux_${ARCH_TYPE}/${HPCSDK_VERSION}/cuda"
-	fi
-
-        cuda_opt=" --with-cuda=${CUDA_DIR} "
-        GPU_OPT="${cuda_opt} --with-cuda-libdir=${CUDA_DIR}/lib64/stubs"
-    fi
-else
-    GPU_OPT="--with-rocm"
-fi
-
 OMPI_CONFIG_OPTIONS_VAR="--prefix ${HPC_DIR} --enable-prte-prefix-by-default \
    --enable-shared --with-cma --with-pic --with-libfabric=${HPC_DIR}         \
-   --without-ucx --with-pmix=internal ${GPU_OPT}"
+   --without-ucx --with-pmix=internal "
 
 # Install OMPI
 OMPI_VER=v5.0
