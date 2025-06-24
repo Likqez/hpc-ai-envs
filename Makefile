@@ -1,27 +1,11 @@
 SHELL := /bin/bash -o pipefail
-VERSION := $(shell cat VERSION)
-VERSION_DASHES := $(subst .,-,$(VERSION))
 SHORT_GIT_HASH := $(shell git rev-parse --short HEAD)
 
 export DOCKERHUB_REGISTRY := cray
-export REGISTRY_REPO := hpc-ai-envs
-CPU_PREFIX_39 := $(REGISTRY_REPO):py-3.9-
-CPU_PREFIX_310 := $(REGISTRY_REPO):py-3.10-
-
-CPU_SUFFIX := -cpu
-PLATFORM_LINUX_ARM_64 := linux/arm64
-PLATFORM_LINUX_AMD_64 := linux/amd64
 BUILD_OPTS ?=
 
-# Default to enabling MPI, OFI and SS11. Note that if we cannot
-# find the SS11 libs automatically and the user did not provide
-# a location we will not end up building the -ss version of the image.
-# This just means the user would need to bind-mount the SS11 libs
-# at runtime.
+# Default to enabling MPI
 WITH_MPI ?= 1
-WITH_OFI ?= 1
-CRAY_LIBFABRIC_DIR ?= "/opt/cray/libfabric/1.15.2.0"
-CRAY_LIBCXI_DIR ?= "/usr"
 
 # If the user doesn't explicitly pass in a value for BUILD_SIF, then
 # default it to 1 if singularity is in the PATH
@@ -35,23 +19,12 @@ BUILD_SIF ?= $(shell singularity -h 2>/dev/null|head -1c 2>/dev/null|wc -l)
 USE_CWD_SIF ?= 0
 
 ifeq "$(WITH_MPI)" "1"
-	HPC_SUFFIX := -hpc
-	PLATFORMS := $(PLATFORM_LINUX_AMD_64),$(PLATFORM_LINUX_ARM_64)
 	MPI_BUILD_ARG := WITH_MPI=1
-
-	ifeq "$(WITH_OFI)" "1"
-		CPU_SUFFIX := -cpu
-		OFI_BUILD_ARG := WITH_OFI=1
-	else
-		CPU_SUFFIX := -cpu
-		OFI_BUILD_ARG := WITH_OFI
-	endif
+	OFI_BUILD_ARG := WITH_OFI=1
 else
-	PLATFORMS := $(PLATFORM_LINUX_AMD_64),$(PLATFORM_LINUX_ARM_64)
-	WITH_MPI := 0
 	OFI_BUILD_ARG := WITH_OFI
-	MPI_BUILD_ARG := USE_GLOO=1
 endif
+	WITH_MPI := 0
 
 BASE_IMAGE_TAG := 3.13.5-slim-bookworm
 BASE_IMAGE := docker.io/python:$(BASE_IMAGE_TAG)
@@ -61,10 +34,12 @@ OUTPUT_IMAGE :=$(BASE_IMAGE_TAG)-hpc
 TMP_SIF := $(shell mktemp -d -t sif-reg.XXXXXX)
 TMP_SIF_BASE := "$(PWD)/$(shell basename $(TMP_SIF))"
 
-SING_DIRS :=
 ifeq "$(USE_CWD_SIF)" "1"
      SING_DIRS := SINGULARITY_TMPDIR=$(TMP_SIF_BASE) SINGULARITY_CACHEDIR=$(TMP_SIF_BASE)
 endif
+
+.PHONY: all
+all: build-hpc
 
 .PHONY: build-sif
 build-sif:

@@ -41,9 +41,6 @@ RUN ${SCRIPT_DIR}/ompi.sh
 # Enable running OMPI as root. Note that we only need this if we use OMPI. 
 ENV OMPI_ALLOW_RUN_AS_ROOT 1
 ENV OMPI_ALLOW_RUN_AS_ROOT_CONFIRM 1
-# Need to override this so we don't try using the OMPI built into the
-# base container, which is not built correctly for libfabric
-ENV OPAL_PREFIX=${WITH_MPI:+$HPC_DIR}
 
 # If we built MPI, override any MPI in /usr/local/mpi that might
 # have been installed by NVIDIA targeting IB.
