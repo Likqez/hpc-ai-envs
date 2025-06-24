@@ -4,13 +4,6 @@ FROM ${BASE_IMAGE}
 ARG SCRIPT_DIR=/tmp/dockerfile_scripts
 RUN mkdir -p ${SCRIPT_DIR}
 
-# Remove the ompi/ucx, etc that is in the base image
-# Seems that the torch installed in the NGC image links against this.
-# Wonder if that will cause problems? We can have it use our OMPI but it
-# also wants libucs, etc, from UCX. The NGC container must be building
-# torch from source and enabling torch distributed with mpi backend.
-#RUN rm -rf /opt/hpcx /usr/local/mpi
-
 # Put all HPC related tools we build under /container/hpc so we can
 # have a shared include, lib, bin, etc to simplify our paths and build steps.
 ARG HPC_DIR=/container/hpc
@@ -56,12 +49,6 @@ ENV OPAL_PREFIX=${WITH_MPI:+$HPC_DIR}
 # have been installed by NVIDIA targeting IB.
 RUN rm -rf /usr/local/mpi && ln -s /container/hpc /usr/local/mpi
 
-# Set an entrypoint that can scrape up the host libfabric.so and then
-# run the user command. This is intended to enable performant execution
-# on non-IB systems that have a proprietary libfabric.
-COPY dockerfile_scripts/scrape_libs.sh ${SCRIPT_DIR}
-RUN mkdir -p /container/bin && \
-    cp ${SCRIPT_DIR}/scrape_libs.sh /container/bin
-ENTRYPOINT ["/container/bin/scrape_libs.sh"]
+ENTRYPOINT ["bash"]
 
 RUN rm -r /tmp/*
