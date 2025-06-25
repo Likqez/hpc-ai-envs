@@ -20,6 +20,7 @@ cd $cray_src_dir/shs-cassini-headers && \
     cp -r share/cassini-headers ${HPC_DIR}/share && \
     cd ../
 
+
 # Install the cxi-driver headers
 cd $cray_src_dir/shs-cxi-driver && \
     cp -r include ${HPC_DIR} && \
@@ -29,14 +30,16 @@ cd $cray_src_dir/shs-cxi-driver && \
 # Build libcxi. Note that this will install into ${HPC_DIR} by default,
 # which is what we want so that libfabric/ompi/aws can easily find it.
 # gt-prototype is still running on 12.0
-shs_libcxi_version=release/shs-12.0
+
+shs_version=shs-12.0
+shs_libcxi_branch=release/$shs_version
 
 #cxi_cflags="-Wno-unused-variable -Wno-unused-but-set-variable -g -O0" 
 #cxi_cppflags="-Wno-unused-variable -Wno-unused-but-set-variable -g -O0"
 cxi_cflags="-Wno-unused-variable -Wno-unused-but-set-variable -I${HPC_DIR}/include -I${HPC_DIR}/linux -I${HPC_DIR}/uapi" 
 cxi_cppflags="-Wno-unused-variable -Wno-unused-but-set-variable -I${HPC_DIR}/include -I${HPC_DIR}/linux -I${HPC_DIR}/uapi"
 cd $cray_src_dir/shs-libcxi && \
-    git checkout -b $shs_libcxi_version && \
+    git checkout -b $shs_libcxi_branch && \
     ./autogen.sh && \
     ./configure --prefix=${HPC_DIR} \
 		CFLAGS="${cxi_cflags}" CPPFLAGS="${cxi_cppflags}" && \
@@ -58,16 +61,16 @@ ofi_cppflags="-Wno-unused-variable -Wno-unused-but-set-variable -I${HPC_DIR}/inc
 LIBFABRIC_BASE_URL="https://github.com/ofiwg/libfabric.git"
 LIBFABRIC_BRANCH="main"
 
-cd $cray_src_dir                       && \
-    git clone ${LIBFABRIC_BASE_URL}    && \
-    cd libfabric                       && \
-    git checkout ${LIBFABRIC_BRANCH}   && \
-    ./autogen.sh                       && \
-    ./configure CFLAGS="${ofi_cflags}"    \
-        CPPFLAGS="${ofi_cppflags}"        \
-	$cray_ofi_config_opts          && \
-    make                               && \
-    make install                       && \
+cd $cray_src_dir                             && \
+    git clone ${LIBFABRIC_BASE_URL}          && \
+    cd libfabric                             && \
+    git checkout ${LIBFABRIC_BRANCH}         && \
+    ./autogen.sh                             && \
+    ./configure CFLAGS="${ofi_cflags}"          \
+        CPPFLAGS="${ofi_cppflags}"              \
+	$cray_ofi_config_opts                      && \
+    make                                     && \
+    make install                             && \
     cd ../
 
 # Clean up our git repos used to build cxi/libfabric

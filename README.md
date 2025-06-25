@@ -104,6 +104,8 @@ $> singularity build pytorch-ngc-hpc-dev-ss-053a634.sif docker-archive:/path/to/
 
 ### MPI OSU Benchmarks
 
+TODO: Update benchmark
+
 The following is an example of how to test MPI to verify that the
 MPI inside the container can correctly use the Cray libfabric/cxi. Note that
 the container used in this example pulled in copies of the Cray libfabric/cxi
@@ -180,3 +182,11 @@ task environments repository:
 https://github.com/determined-ai/environments/tree/cleanup-hpc-build
 
 
+### CXI Latency Benchmarks
+```shell
+srun --nodelist=gtnode19 --exclusive --ntasks=1 singularity exec 3.13.5-slim-bookworm-hpc-84193c9.sif cxi_write_lat > /dev/null 2>&1
+srun --nodelist=gtnode20 --exclusive --ntasks=1 singularity exec 3.13.5-slim-bookworm-hpc-84193c9.sif cxi_write_lat gtnode19
+
+srun --nodelist=gtnode19 --exclusive --ntasks=1 singularity exec 3.13.5-slim-bookworm-hpc-84193c9.sif cxi_read_lat > /dev/null 2>&1
+srun --nodelist=gtnode20 --exclusive --ntasks=1 singularity exec 3.13.5-slim-bookworm-hpc-84193c9.sif cxi_read_lat gtnode19
+```
