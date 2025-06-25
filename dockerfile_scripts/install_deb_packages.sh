@@ -31,9 +31,6 @@ apt-get update \
     pkg-config \
     wget \
     nfs-common \
-    libnuma1 \
-    libnuma-dev \
-    libpmi2-0-dev \
     hwloc \
     libhwloc-dev \
     libjson-c-dev \

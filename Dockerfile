@@ -33,19 +33,6 @@ RUN ${SCRIPT_DIR}/install_deb_packages.sh
 COPY dockerfile_scripts/cray-libs.sh ${SCRIPT_DIR}
 RUN ${SCRIPT_DIR}/cray-libs.sh
 
-# Install all HPC related tools under /container (e.g., mpi, ofi, etc).
-ARG MPI_TYPE
-COPY dockerfile_scripts/ompi.sh ${SCRIPT_DIR}
-RUN ${SCRIPT_DIR}/ompi.sh
-
-# Enable running OMPI as root. Note that we only need this if we use OMPI. 
-ENV OMPI_ALLOW_RUN_AS_ROOT 1
-ENV OMPI_ALLOW_RUN_AS_ROOT_CONFIRM 1
-
-# If we built MPI, override any MPI in /usr/local/mpi that might
-# have been installed by NVIDIA targeting IB.
-RUN rm -rf /usr/local/mpi && ln -s /container/hpc /usr/local/mpi
-
 ENTRYPOINT ["bash"]
 
 RUN rm -r /tmp/*
