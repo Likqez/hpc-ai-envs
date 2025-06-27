@@ -19,7 +19,7 @@ USE_CWD_SIF ?= 0
 
 BASE_IMAGE_TAG := 3.13.5-slim-bookworm
 BASE_IMAGE := docker.io/python:$(BASE_IMAGE_TAG)
-OUTPUT_IMAGE :=$(BASE_IMAGE_TAG)-hpc
+OUTPUT_IMAGE :=$(DOCKERHUB_REGISTRY)/$(BASE_IMAGE_TAG)-hpc-$(SHORT_GIT_HASH)
 
 # build sif
 TMP_SIF := $(shell mktemp -d -t sif-reg.XXXXXX)
@@ -48,7 +48,7 @@ build-sif:
 build-hpc:
 	docker build -f Dockerfile \
 		--build-arg BASE_IMAGE="$(BASE_IMAGE)" \
-		-t $(DOCKERHUB_REGISTRY)/$(OUTPUT_IMAGE):$(SHORT_GIT_HASH) \
+		-t $(OUTPUT_IMAGE) \
 		.
 
 # Build the SIF image
