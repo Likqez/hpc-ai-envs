@@ -50,12 +50,3 @@ build-hpc:
 		--build-arg BASE_IMAGE="$(BASE_IMAGE)" \
 		-t $(OUTPUT_IMAGE) \
 		.
-
-# Build the SIF image
-ifeq "$(BUILD_SIF)" "1"
-	$(MAKE) build-sif TARGET_TAG="$(DOCKERHUB_REGISTRY)/$(OUTPUT_IMAGE):$(SHORT_GIT_HASH)" TARGET_NAME="$(OUTPUT_IMAGE)-$(SHORT_GIT_HASH)"
-
-else
-	docker save $(DOCKERHUB_REGISTRY)/$(OUTPUT_IMAGE):$(SHORT_GIT_HASH) -o $(OUTPUT_IMAGE)-$(SHORT_GIT_HASH).tar
-	echo "Use docker load -i $(OUTPUT_IMAGE)-$(SHORT_GIT_HASH).tar to load the image."
-endif
