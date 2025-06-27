@@ -1,6 +1,0 @@
-attrdict3
-pandas
-matplotlib
-petname
-azure-storage-blob
-analytics-python

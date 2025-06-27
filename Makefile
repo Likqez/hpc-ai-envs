@@ -1,8 +1,7 @@
 SHELL := /bin/bash -o pipefail
 SHORT_GIT_HASH := $(shell git rev-parse --short HEAD)
 
-export DOCKERHUB_REGISTRY := cray
-BUILD_OPTS ?=
+export DOCKERHUB_REGISTRY := trcm
 
 # Default to enabling MPI
 WITH_MPI ?= 1
@@ -17,14 +16,6 @@ BUILD_SIF ?= $(shell singularity -h 2>/dev/null|head -1c 2>/dev/null|wc -l)
 # If not specified (or if USE_CWD_SIF=0 is set) then singularity will
 # use its default tmp and cache dir locations.
 USE_CWD_SIF ?= 0
-
-ifeq "$(WITH_MPI)" "1"
-	MPI_BUILD_ARG := WITH_MPI=1
-	OFI_BUILD_ARG := WITH_OFI=1
-else
-	OFI_BUILD_ARG := WITH_OFI
-endif
-	WITH_MPI := 0
 
 BASE_IMAGE_TAG := 3.13.5-slim-bookworm
 BASE_IMAGE := docker.io/python:$(BASE_IMAGE_TAG)
@@ -55,11 +46,7 @@ build-sif:
 # build hpc
 .PHONY: build-hpc
 build-hpc:
-	docker build -f Dockerfile $(BUILD_OPTS) \
-		--build-arg "$(MPI_BUILD_ARG)" \
-		--build-arg "$(OFI_BUILD_ARG)" \
-		--build-arg "WITH_PT=1" \
-		--build-arg "WITH_TF=0" \
+	docker build -f Dockerfile \
 		--build-arg BASE_IMAGE="$(BASE_IMAGE)" \
 		-t $(DOCKERHUB_REGISTRY)/$(OUTPUT_IMAGE):$(SHORT_GIT_HASH) \
 		.
