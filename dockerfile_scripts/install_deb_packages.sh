@@ -43,6 +43,7 @@ apt-get update \
     libyaml-dev \
     libsensors-dev \
     gdb \
+    environment-modules \
     unattended-upgrades \
   && unattended-upgrade \
   && rm -rf /var/lib/apt/lists/* \
