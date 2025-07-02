@@ -26,6 +26,9 @@ RUN ${SCRIPT_DIR}/setup_sh_env.sh
 COPY dockerfile_scripts/install_deb_packages.sh ${SCRIPT_DIR}
 RUN ${SCRIPT_DIR}/install_deb_packages.sh
 
+# Create a symlink for python3 to /usr/local/bin/python
+RUN ln -s $(which python3) /usr/local/bin/python
+
 # Should we just use /container as the install dir and put
 # everything (ie, ucx/ofi/ompi/mpich) under /container/{bin|lib}
 # to clean up these arguments?

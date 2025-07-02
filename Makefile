@@ -17,8 +17,8 @@ BUILD_SIF ?= $(shell singularity -h 2>/dev/null|head -1c 2>/dev/null|wc -l)
 # use its default tmp and cache dir locations.
 USE_CWD_SIF ?= 0
 
-BASE_IMAGE_TAG := 3.13.5-slim-bookworm
-BASE_IMAGE := docker.io/python:$(BASE_IMAGE_TAG)
+BASE_IMAGE_TAG := 22.04
+BASE_IMAGE := docker.io/ubuntu:$(BASE_IMAGE_TAG)
 OUTPUT_IMAGE :=$(DOCKERHUB_REGISTRY)/$(BASE_IMAGE_TAG)-hpc-$(SHORT_GIT_HASH)
 
 # build sif
