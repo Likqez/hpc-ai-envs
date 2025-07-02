@@ -32,6 +32,7 @@ apt-get update \
     wget \
     nfs-common \
     hwloc \
+    python3-pip \
     libhwloc-dev \
     libjson-c-dev \
     libnl-3-dev \

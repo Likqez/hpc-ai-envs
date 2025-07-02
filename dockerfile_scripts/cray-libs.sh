@@ -43,7 +43,7 @@ cd $cray_src_dir/shs-libcxi && \
     ./autogen.sh && \
     ./configure --prefix=${HPC_DIR} \
 		CFLAGS="${cxi_cflags}" CPPFLAGS="${cxi_cppflags}" && \
-    make && \
+    make -j && \
     make install && \
     cd ../
 
@@ -69,7 +69,7 @@ cd $cray_src_dir                             && \
     ./configure CFLAGS="${ofi_cflags}"          \
         CPPFLAGS="${ofi_cppflags}"              \
 	$cray_ofi_config_opts                      && \
-    make                                     && \
+    make -j                                  && \
     make install                             && \
     cd ../
 
