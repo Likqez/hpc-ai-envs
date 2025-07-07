@@ -36,6 +36,11 @@ RUN ln -s $(which python3) /usr/local/bin/python
 COPY dockerfile_scripts/cray-libs.sh ${SCRIPT_DIR}
 RUN ${SCRIPT_DIR}/cray-libs.sh
 
+# Install all HPC related tools under /container (e.g., mpi, ofi, etc).
+ARG MPI_TYPE
+COPY dockerfile_scripts/ompi.sh ${SCRIPT_DIR}
+RUN ${SCRIPT_DIR}/ompi.sh
+
 ENTRYPOINT ["bash"]
 
 RUN rm -r /tmp/*

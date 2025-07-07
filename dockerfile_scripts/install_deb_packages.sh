@@ -31,6 +31,7 @@ apt-get update \
     pkg-config \
     wget \
     nfs-common \
+    libpmi2-0-dev \
     hwloc \
     python3-pip \
     libhwloc-dev \
@@ -43,6 +44,7 @@ apt-get update \
     libfuse-dev \
     libyaml-dev \
     libsensors-dev \
+    libpmix-dev \
     gdb \
     environment-modules \
     unattended-upgrades \
