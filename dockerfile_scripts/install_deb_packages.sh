@@ -43,9 +43,13 @@ apt-get update \
     fuse \
     libfuse-dev \
     libyaml-dev \
+    libboost-dev \
+    libndctl-dev \
+    ndctl \
     libsensors-dev \
     libpmix-dev \
     gdb \
+    flex \
     environment-modules \
     unattended-upgrades \
   && unattended-upgrade \
