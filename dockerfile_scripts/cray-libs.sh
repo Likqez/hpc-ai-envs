@@ -59,7 +59,7 @@ ofi_cppflags="-Wno-unused-variable -Wno-unused-but-set-variable -I${HPC_DIR}/inc
 ## Building from the Libfabric main branch
 
 LIBFABRIC_BASE_URL="https://github.com/ofiwg/libfabric.git"
-LIBFABRIC_BRANCH="main"
+LIBFABRIC_BRANCH="tags/v1.14.0"
 
 cd $cray_src_dir                             && \
     git clone ${LIBFABRIC_BASE_URL}          && \
